@@ -1,3 +1,4 @@
+import 'package:doctor_appointment/chat.dart';
 import 'package:doctor_appointment/doctor_registration.dart';
 import 'package:doctor_appointment/hospita_register.dart';
 import 'package:doctor_appointment/patient_registration_form.dart';
@@ -17,7 +18,7 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(0xFFFFb300),
+        backgroundColor: Theme.of(context).primaryColor,
         title: Text(
           'Home',
           style: TextStyle(color: Colors.black),
@@ -70,6 +71,11 @@ class _HomeState extends State<Home> {
               leading: Icon(Icons.security),
               onTap: () {},
             ),
+            ListTile(
+              title: Text('Chat with Doctor'),
+              leading: Icon(Icons.chat),
+              onTap: () => Navigator.pushNamed(context, ChatScreen.id),
+            )
           ],
         ),
       ),

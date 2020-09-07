@@ -15,7 +15,7 @@ class _PatientRegistrationFormState extends State<PatientRegistrationForm> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(0xFFFFb300),
+        backgroundColor: Theme.of(context).primaryColor,
         title: Text(
           'Patient Registration',
           style: TextStyle(color: Colors.black),
@@ -293,48 +293,6 @@ class _BuildFormState extends State<BuildForm> {
               },
               child: Text('Submit'),
             ),
-//            Row(
-//              children: <Widget>[
-//                Padding(
-//                  padding: const EdgeInsets.all(8.0),
-//                  child: TextFormField(
-//                    validator: (String value) {
-//                      if (value.isEmpty) {
-//                        return "Error must not be empty";
-//                      }
-//
-//                      return null;
-//                    },
-//                    decoration: InputDecoration(
-//                        hintText: 'Surgery Budget Range',
-//                        labelText: 'Surgery Budget',
-//                        border: OutlineInputBorder(
-//                          borderRadius: BorderRadius.circular(5.0),
-//                        )),
-//                    keyboardType: TextInputType.multiline,
-//                  ),
-//                ),
-//              ],
-//            ),
-//            Padding(
-//              padding: const EdgeInsets.all(8.0),
-//              child: TextFormField(
-//                validator: (String value) {
-//                  if (value.isEmpty) {
-//                    return "Error must not be empty";
-//                  }
-//
-//                  return null;
-//                },
-//                decoration: InputDecoration(
-//                    hintText: 'Consent',
-//                    labelText: 'Consent',
-//                    border: OutlineInputBorder(
-//                      borderRadius: BorderRadius.circular(5.0),
-//                    )),
-//                keyboardType: TextInputType.multiline,
-//              ),
-//            ),
           ],
         ),
       ),
