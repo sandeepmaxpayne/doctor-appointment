@@ -1,18 +1,19 @@
-import 'package:doctor_appointment/model/forms.dart';
+import 'package:doctor_appointment/model/patient_form_data.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
 
-class FormController {
+class PatientFormController {
   // Google App Script Web URL
   static const String URL =
-      "https://script.google.com/macros/s/AKfycbxIZqY-kNpK9bk40NHz-RmrRASZV3nyKXNh8GmtcnKo-ye4f-o/exec";
+      "https://script.google.com/macros/s/AKfycbxBlhZY4b3QFqdTgWuV7GAQqc7_TUxCycLiSDp2nkZM8ADXu0Q/exec";
 
   static const STATUS_SUCCESS = "SUCCESS";
 
   ///async function which saves the form data , parses [FeedForm] parameters
   ///and sends HTTP GET request on [URL]. on success [callback] is called.
 
-  void submitForm(FeedForm feedForm, void Function(String) callback) async {
+  void submitForm(
+      PatientFormData feedForm, void Function(String) callback) async {
     try {
       await http.post(URL, body: feedForm.toJson()).then((response) async {
         print("response code:${response.statusCode}");
@@ -31,13 +32,15 @@ class FormController {
   }
 
   //Method to get the users data
-  Future<List<FeedForm>> getFeedList() async {
+  Future<List<PatientFormData>> getFeedList() async {
     return await http.get(URL).then((response) {
       var jsonFeedResult = convert.jsonDecode(response.body) as List;
       print(
-          "response: ${jsonFeedResult.map((v) => FeedForm.fromJson(v).toJson())}");
+          "response: ${jsonFeedResult.map((v) => PatientFormData.fromJson(v).toJson())}");
 
-      return jsonFeedResult.map((json) => FeedForm.fromJson(json)).toList();
+      return jsonFeedResult
+          .map((json) => PatientFormData.fromJson(json))
+          .toList();
     });
   }
 }

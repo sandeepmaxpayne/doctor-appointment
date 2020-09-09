@@ -1,3 +1,4 @@
+import 'package:doctor_appointment/admin/test_screen.dart';
 import 'package:doctor_appointment/chat.dart';
 import 'package:doctor_appointment/doctor_registration.dart';
 import 'package:doctor_appointment/hospita_register.dart';
@@ -18,7 +19,8 @@ class DoctorApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(primaryColor: Color(0xFFFFb300)),
-      initialRoute: LoginScreen.id,
+       initialRoute: LoginScreen.id,
+     // home: TestScreen(),
       routes: {
         'home': (context) => Home(),
         'LoginScreen': (context) => LoginScreen(),

@@ -1,5 +1,9 @@
+import 'package:doctor_appointment/controller/patient_form_controller.dart';
+import 'package:doctor_appointment/model/patient_form_data.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
+import 'model/forms.dart';
 
 class PatientRegistrationForm extends StatefulWidget {
   static const patient_form = "PatientForm";
@@ -49,251 +53,320 @@ class _BuildFormState extends State<BuildForm> {
   String gender = 'Male';
   var selectedRange = RangeValues(200, 5000);
   int currentSliderValue = 250;
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
+  TextEditingController patientNameController = TextEditingController();
+  TextEditingController ageController = TextEditingController();
+  TextEditingController genderController = TextEditingController();
+  TextEditingController langController = TextEditingController();
+  TextEditingController placeController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
+  TextEditingController phoneNoController = TextEditingController();
+  TextEditingController complaintController = TextEditingController();
+  TextEditingController investigationController = TextEditingController();
+  TextEditingController diagnosisController = TextEditingController();
+  TextEditingController surgeryAdviseController = TextEditingController();
+  TextEditingController startBudgetController = TextEditingController();
+  TextEditingController endBudgetController = TextEditingController();
+
+  snackBarMessage(String message, Color color) {
+    return _scaffoldKey.currentState.showSnackBar(SnackBar(
+      content: Text(message),
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(20.0), topRight: Radius.circular(20.0))),
+      backgroundColor: color,
+      behavior: SnackBarBehavior.fixed,
+    ));
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Form(
-      key: widget._formKey,
-      child: SingleChildScrollView(
-        physics: ScrollPhysics(parent: BouncingScrollPhysics()),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextFormField(
-                keyboardType: TextInputType.text,
-                validator: (String value) {
-                  if (value.isEmpty) {
-                    return "Error must not be empty";
-                  }
-                  return null;
-                },
-                decoration: InputDecoration(
-                    hintText: 'Patient\'s Name',
-                    labelText: 'Patient\'s Name',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(5.0),
-                    )),
+    return Scaffold(
+      key: _scaffoldKey,
+      body: Form(
+        key: widget._formKey,
+        child: SingleChildScrollView(
+          physics: ScrollPhysics(parent: BouncingScrollPhysics()),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextFormField(
+                  controller: patientNameController,
+                  keyboardType: TextInputType.text,
+                  validator: (String value) {
+                    if (value.isEmpty) {
+                      return "Error must not be empty";
+                    }
+                    return null;
+                  },
+                  decoration: InputDecoration(
+                      hintText: 'Patient\'s Name',
+                      labelText: 'Patient\'s Name',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(5.0),
+                      )),
+                ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextFormField(
-                validator: (String value) {
-                  if (value.isEmpty) {
-                    return "Error must not be empty";
-                  }
-                  return null;
-                },
-                decoration: InputDecoration(
-                    hintText: 'Age',
-                    labelText: 'Age',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(2.0),
-                    )),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextFormField(
+                  controller: ageController,
+                  validator: (String value) {
+                    if (value.isEmpty) {
+                      return "Error must not be empty";
+                    }
+                    return null;
+                  },
+                  decoration: InputDecoration(
+                      hintText: 'Age',
+                      labelText: 'Age',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(2.0),
+                      )),
+                ),
               ),
-            ),
-            Center(
-              child: DropdownButton<String>(
-                onChanged: (String newValue) {
+              Center(
+                child: DropdownButton<String>(
+                  onChanged: (String newValue) {
+                    setState(() {
+                      gender = newValue;
+                      genderController.text = newValue;
+                      print('gender: $gender');
+                    });
+                  },
+                  value: gender,
+                  items: ['Male', 'Female']
+                      .map<DropdownMenuItem<String>>(
+                          (e) => DropdownMenuItem<String>(
+                                value: e,
+                                child: Text(e),
+                                onTap: () {
+                                  print('value: $e');
+                                },
+                              ))
+                      .toList(),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextFormField(
+                  controller: langController,
+                  validator: (String value) {
+                    if (value.isEmpty) {
+                      return "Error must not be empty";
+                    }
+                    return null;
+                  },
+                  decoration: InputDecoration(
+                      hintText: 'Language',
+                      labelText: 'Language',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(5.0),
+                      )),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextFormField(
+                  controller: placeController,
+                  validator: (String value) {
+                    if (value.isEmpty) {
+                      return "Error must not be empty";
+                    }
+                    return null;
+                  },
+                  decoration: InputDecoration(
+                      hintText: 'Place/District/State',
+                      labelText: 'Place/District/State',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(5.0),
+                      )),
+                  keyboardType: TextInputType.multiline,
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextFormField(
+                  controller: emailController,
+                  validator: (String value) {
+                    if (value.isEmpty) {
+                      return "Error must not be empty";
+                    }
+                    return null;
+                  },
+                  decoration: InputDecoration(
+                      hintText: 'Email',
+                      labelText: 'Email',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(5.0),
+                      )),
+                  keyboardType: TextInputType.emailAddress,
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextFormField(
+                  controller: phoneNoController,
+                  validator: (String value) {
+                    if (value.isEmpty) {
+                      return "Error must not be empty";
+                    } else if (value.length < 10) {
+                      return "Enter a valid mobile number";
+                    }
+                    return null;
+                  },
+                  decoration: InputDecoration(
+                      hintText: 'Phone Number',
+                      labelText: 'Phone Number',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(5.0),
+                      )),
+                  keyboardType: TextInputType.number,
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextFormField(
+                  controller: complaintController,
+                  validator: (String value) {
+                    if (value.isEmpty) {
+                      return "Error must not be empty";
+                    }
+
+                    return null;
+                  },
+                  decoration: InputDecoration(
+                      hintText: 'Complaint',
+                      labelText: 'Complaint',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(5.0),
+                      )),
+                  keyboardType: TextInputType.multiline,
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextFormField(
+                  controller: investigationController,
+                  validator: (String value) {
+                    if (value.isEmpty) {
+                      return "Error must not be empty";
+                    }
+
+                    return null;
+                  },
+                  decoration: InputDecoration(
+                      hintText: 'Investigation',
+                      labelText: 'Investigation',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(5.0),
+                      )),
+                  keyboardType: TextInputType.multiline,
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextFormField(
+                  controller: diagnosisController,
+                  maxLines: 3,
+                  validator: (String value) {
+                    if (value.isEmpty) {
+                      return "Error must not be empty";
+                    }
+
+                    return null;
+                  },
+                  decoration: InputDecoration(
+                      hintText: 'Diagnosis',
+                      labelText: 'Diagnosis',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(5.0),
+                      )),
+                  keyboardType: TextInputType.multiline,
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextFormField(
+                  controller: surgeryAdviseController,
+                  validator: (String value) {
+                    if (value.isEmpty) {
+                      return "Error must not be empty";
+                    }
+
+                    return null;
+                  },
+                  decoration: InputDecoration(
+                      hintText: 'Surgery Advised',
+                      labelText: 'Surgery Advised',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(5.0),
+                      )),
+                  keyboardType: TextInputType.multiline,
+                ),
+              ),
+              RangeSlider(
+                onChanged: (RangeValues newRange) {
                   setState(() {
-                    gender = newValue;
-                    print('gender: $gender');
+                    selectedRange = newRange;
+                    startBudgetController.text = selectedRange.start.toString();
+                    endBudgetController.text = selectedRange.end.toString();
+                    print('selected range: $selectedRange');
                   });
                 },
-                value: gender,
-                items: ['Male', 'Female']
-                    .map<DropdownMenuItem<String>>(
-                        (e) => DropdownMenuItem<String>(
-                              value: e,
-                              child: Text(e),
-                              onTap: () {
-                                print('value: $e');
-                              },
-                            ))
-                    .toList(),
+                min: 200.0,
+                max: 5000.0,
+                divisions: 100,
+                values: selectedRange,
+                activeColor: Colors.blueAccent,
+                labels: RangeLabels('\u20B9${selectedRange.start}',
+                    '\u20B9${selectedRange.end}'),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextFormField(
-                validator: (String value) {
-                  if (value.isEmpty) {
-                    return "Error must not be empty";
-                  }
-                  return null;
-                },
-                decoration: InputDecoration(
-                    hintText: 'Language',
-                    labelText: 'Language',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(5.0),
-                    )),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextFormField(
-                validator: (String value) {
-                  if (value.isEmpty) {
-                    return "Error must not be empty";
-                  }
-                  return null;
-                },
-                decoration: InputDecoration(
-                    hintText: 'Place/District/State',
-                    labelText: 'Place/District/State',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(5.0),
-                    )),
-                keyboardType: TextInputType.multiline,
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextFormField(
-                validator: (String value) {
-                  if (value.isEmpty) {
-                    return "Error must not be empty";
-                  }
-                  return null;
-                },
-                decoration: InputDecoration(
-                    hintText: 'Email',
-                    labelText: 'Email',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(5.0),
-                    )),
-                keyboardType: TextInputType.emailAddress,
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextFormField(
-                validator: (String value) {
-                  if (value.isEmpty) {
-                    return "Error must not be empty";
-                  } else if (value.length <= 10) {
-                    return "Enter a valid mobile number";
-                  }
-                  return null;
-                },
-                decoration: InputDecoration(
-                    hintText: 'Phone Number',
-                    labelText: 'Phone Number',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(5.0),
-                    )),
-                keyboardType: TextInputType.phone,
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextFormField(
-                validator: (String value) {
-                  if (value.isEmpty) {
-                    return "Error must not be empty";
-                  }
+              RaisedButton(
+                color: Color(0xFFFFE97D),
+                onPressed: () {
+                  if (widget._formKey.currentState.validate()) {
+                    PatientFormData patientForm = PatientFormData(
+                        patientNameController.text,
+                        ageController.text,
+                        genderController.text,
+                        langController.text,
+                        placeController.text,
+                        emailController.text,
+                        phoneNoController.text,
+                        complaintController.text,
+                        investigationController.text,
+                        diagnosisController.text,
+                        surgeryAdviseController.text,
+                        startBudgetController.text,
+                        endBudgetController.text);
 
-                  return null;
-                },
-                decoration: InputDecoration(
-                    hintText: 'Complaint',
-                    labelText: 'Complaint',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(5.0),
-                    )),
-                keyboardType: TextInputType.multiline,
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextFormField(
-                validator: (String value) {
-                  if (value.isEmpty) {
-                    return "Error must not be empty";
-                  }
+                    PatientFormController patientFormController =
+                        PatientFormController();
 
-                  return null;
-                },
-                decoration: InputDecoration(
-                    hintText: 'Investigation',
-                    labelText: 'Investigation',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(5.0),
-                    )),
-                keyboardType: TextInputType.multiline,
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextFormField(
-                maxLines: 3,
-                validator: (String value) {
-                  if (value.isEmpty) {
-                    return "Error must not be empty";
+                    patientFormController.submitForm(patientForm,
+                        (String response) {
+                      print("response: $response");
+                      if (response == PatientFormController.STATUS_SUCCESS) {
+                        //data saved successfully in google sheets
+                        print(
+                            "datata recorded successfully ${patientForm.toJson()}");
+                        snackBarMessage(
+                            "Data recorded successfully", Colors.green);
+                      } else {
+                        print("error saving data");
+                        snackBarMessage("Error Saving Data!", Colors.red);
+                      }
+                    });
                   }
-
-                  return null;
                 },
-                decoration: InputDecoration(
-                    hintText: 'Diagnosis',
-                    labelText: 'Diagnosis',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(5.0),
-                    )),
-                keyboardType: TextInputType.multiline,
+                child: Text('Submit'),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextFormField(
-                validator: (String value) {
-                  if (value.isEmpty) {
-                    return "Error must not be empty";
-                  }
-
-                  return null;
-                },
-                decoration: InputDecoration(
-                    hintText: 'Surgery Advised',
-                    labelText: 'Surgery Advised',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(5.0),
-                    )),
-                keyboardType: TextInputType.multiline,
-              ),
-            ),
-            RangeSlider(
-              onChanged: (RangeValues newRange) {
-                setState(() {
-                  selectedRange = newRange;
-                  print('selected range: $selectedRange');
-                });
-              },
-              min: 200.0,
-              max: 5000.0,
-              divisions: 100,
-              values: selectedRange,
-              activeColor: Colors.blueAccent,
-              labels: RangeLabels(
-                  '\u20B9${selectedRange.start}', '\u20B9${selectedRange.end}'),
-            ),
-            RaisedButton(
-              color: Color(0xFFFFE97D),
-              onPressed: () {
-                if (widget._formKey.currentState.validate()) {
-                  Scaffold.of(context).showSnackBar(SnackBar(
-                    content: Text('Successfully validated'),
-                    backgroundColor: Colors.green,
-                  ));
-                }
-              },
-              child: Text('Submit'),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

@@ -336,24 +336,27 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
                 FormController formController = FormController();
 
-                formController.submitForm(feedForm, (String response) {
-                  print("response: $response");
-                  if (response == FormController.STATUS_SUCCESS) {
-                    //data saved successfully in google sheets
-                    print("datata recorded successfully ${feedForm.toJson()}");
-                    snackBarMessage("Data recorded successfully", Colors.green);
-                  } else {
-                    print("error saving data");
-                    snackBarMessage("Error Saving Data!", Colors.red);
-                  }
-                });
-
                 setState(() {
                   showSpinner = true;
                 });
                 try {
                   final user = await _auth.createUserWithEmailAndPassword(
                       email: registerEmail, password: registerPassword);
+                  //store data to sheet
+                  formController.submitForm(feedForm, (String response) {
+                    print("response: $response");
+                    if (response == FormController.STATUS_SUCCESS) {
+                      //data saved successfully in google sheets
+                      print(
+                          "datata recorded successfully ${feedForm.toJson()}");
+                      snackBarMessage(
+                          "Data recorded successfully", Colors.green);
+                    } else {
+                      print("error saving data");
+                      snackBarMessage("Error Saving Data!", Colors.red);
+                    }
+                  });
+
                   if (user != null) {
                     setState(() {
                       showSpinner = false;
