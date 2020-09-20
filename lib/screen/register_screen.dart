@@ -1,3 +1,4 @@
+import 'package:flutter/services.dart';
 import 'package:doctor_appointment/borders.dart';
 import 'package:doctor_appointment/controller/form_controller.dart';
 import 'package:doctor_appointment/custom_button.dart';
@@ -342,6 +343,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 try {
                   final user = await _auth.createUserWithEmailAndPassword(
                       email: registerEmail, password: registerPassword);
+                  await _auth.verifyPhoneNumber(
+                      phoneNumber: phoneNo,
+                      timeout: null,
+                      verificationCompleted: null,
+                      verificationFailed: null,
+                      codeSent: null,
+                      codeAutoRetrievalTimeout: null);
                   //store data to sheet
                   formController.submitForm(feedForm, (String response) {
                     print("response: $response");

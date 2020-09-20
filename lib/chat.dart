@@ -95,7 +95,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   FlatButton(
                     onPressed: () {
                       if (messageTextController.text.isNotEmpty) {
-                        _firestore.collection('messages').add({
+                        _firestore.collection('messages1').add({
                           'text': messageText,
                           'sender': loggedInUser.email,
                           // 'time': DateTime.now()
@@ -124,12 +124,12 @@ class MessageStream extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
-      stream: _firestore.collection('messages').orderBy('date').snapshots(),
+      stream: _firestore.collection('messages1').orderBy('date').snapshots(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return Center(
             child: CircularProgressIndicator(
-              backgroundColor: Colors.lightBlueAccent,
+              backgroundColor: Theme.of(context).primaryColor,
             ),
           );
         }

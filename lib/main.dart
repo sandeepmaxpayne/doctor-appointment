@@ -1,3 +1,5 @@
+import 'package:doctor_appointment/admin/registerDoctorDetail_screen.dart';
+import 'package:doctor_appointment/admin/registerHospitalDetail_screen.dart';
 import 'package:doctor_appointment/admin/test_screen.dart';
 import 'package:doctor_appointment/chat.dart';
 import 'package:doctor_appointment/doctor_registration.dart';
@@ -8,6 +10,8 @@ import 'package:doctor_appointment/screen/login_screen.dart';
 import 'package:doctor_appointment/screen/register_screen.dart';
 import 'package:flutter/material.dart';
 
+import 'admin/patientdetail_screen.dart';
+import 'admin/refree_screen.dart';
 import 'home_page.dart';
 
 void main() {
@@ -19,8 +23,11 @@ class DoctorApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(primaryColor: Color(0xFFFFb300)),
-       initialRoute: LoginScreen.id,
-     // home: TestScreen(),
+      initialRoute: LoginScreen.id,
+//      home: AllHospitalDetails(),
+//      home: AllRegisterDoctorScreen(),
+      // home: AllPatientDetailScreen(),
+      //  home: RefreeScreen(),
       routes: {
         'home': (context) => Home(),
         'LoginScreen': (context) => LoginScreen(),

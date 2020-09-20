@@ -1,6 +1,12 @@
+import 'dart:io';
+
 import 'package:doctor_appointment/controller/doctor_form_controller.dart';
 import 'package:doctor_appointment/model/doctor_form_data.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:path/path.dart' as p;
 
 class DoctorRegister extends StatelessWidget {
   static const id = 'DoctorReg';
@@ -53,6 +59,46 @@ class _BuildFormState extends State<BuildForm> {
   TextEditingController regNoController = TextEditingController();
   TextEditingController skillController = TextEditingController();
   TextEditingController freelanceController = TextEditingController();
+  String fileType = '';
+  String fileName = '';
+  String operationText = '';
+  String result = '';
+  File file;
+  bool isUploaded = true;
+
+  Future filePicker(BuildContext context) async {
+    try {
+      if (fileType == 'others') {
+        file = await FilePicker.getFile(
+          type: FileType.any,
+        );
+
+        fileName = p.basename(file.path);
+        setState(() {
+          fileName = p.basename(file.path);
+        });
+        print('file name: $fileName');
+        _uploadFile(file, fileName);
+      }
+    } on PlatformException catch (e) {
+      snackBarMessage('Unsupported Exception: $e', Colors.red);
+    }
+  }
+
+  Future<void> _uploadFile(File file, String fileName) async {
+    StorageReference storageReference;
+
+    if (fileType == 'others') {
+      storageReference = FirebaseStorage.instance
+          .ref()
+          .child('degree/${phoneNoController.text}/$fileName');
+    }
+    final StorageUploadTask uploadTask = storageReference.putFile(file);
+    final StorageTaskSnapshot downloadUrl = (await uploadTask.onComplete);
+    final String url = (await downloadUrl.ref.getDownloadURL());
+    print("URL is $url");
+    result = url;
+  }
 
   snackBarMessage(String message, Color color) {
     return _scaffoldKey.currentState.showSnackBar(SnackBar(
@@ -233,25 +279,40 @@ class _BuildFormState extends State<BuildForm> {
                   keyboardType: TextInputType.multiline,
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: TextFormField(
-                  controller: degreeController,
-                  validator: (String value) {
-                    if (value.isEmpty) {
-                      return "Error must not be empty";
-                    }
-
-                    return null;
-                  },
-                  decoration: InputDecoration(
-                      hintText: 'Upload Degree',
-                      labelText: 'Upload Degree',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(5.0),
-                      )),
-                  keyboardType: TextInputType.multiline,
+//              Padding(
+//                padding: const EdgeInsets.all(8.0),
+//                child: TextFormField(
+//                  controller: degreeController,
+//                  validator: (String value) {
+//                    if (value.isEmpty) {
+//                      return "Error must not be empty";
+//                    }
+//
+//                    return null;
+//                  },
+//                  decoration: InputDecoration(
+//                      hintText: 'Upload Degree',
+//                      labelText: 'Upload Degree',
+//                      border: OutlineInputBorder(
+//                        borderRadius: BorderRadius.circular(5.0),
+//                      )),
+//                  keyboardType: TextInputType.multiline,
+//                ),
+//              ),
+              ListTile(
+                title: Text(
+                  'Upload Degree',
+                  style: TextStyle(color: Colors.black),
                 ),
+                leading: Icon(Icons.attach_file),
+                onTap: () {
+                  setState(() {
+                    fileType = 'others';
+                    print('result: $result');
+                    degreeController.text = result;
+                  });
+                  filePicker(context);
+                },
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -350,6 +411,7 @@ class _BuildFormState extends State<BuildForm> {
                       }
                     });
                   }
+                  Navigator.of(context).pop();
                 },
                 child: Text('Submit'),
               ),

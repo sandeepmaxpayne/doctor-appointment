@@ -1,9 +1,8 @@
+import 'package:doctor_appointment/chat.dart';
 import 'package:doctor_appointment/controller/patient_form_controller.dart';
 import 'package:doctor_appointment/model/patient_form_data.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
-import 'model/forms.dart';
 
 class PatientRegistrationForm extends StatefulWidget {
   static const patient_form = "PatientForm";
@@ -353,9 +352,12 @@ class _BuildFormState extends State<BuildForm> {
                       if (response == PatientFormController.STATUS_SUCCESS) {
                         //data saved successfully in google sheets
                         print(
-                            "datata recorded successfully ${patientForm.toJson()}");
+                            "data recorded successfully ${patientForm.toJson()}");
                         snackBarMessage(
                             "Data recorded successfully", Colors.green);
+
+                        ///Redirect to chat
+                        Navigator.pushNamed(context, ChatScreen.id);
                       } else {
                         print("error saving data");
                         snackBarMessage("Error Saving Data!", Colors.red);

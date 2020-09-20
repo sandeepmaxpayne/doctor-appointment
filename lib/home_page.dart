@@ -3,6 +3,8 @@ import 'package:doctor_appointment/doctor_registration.dart';
 import 'package:doctor_appointment/hospita_register.dart';
 import 'package:doctor_appointment/patient_registration_form.dart';
 import 'package:doctor_appointment/referre.dart';
+import 'package:doctor_appointment/screen/login_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -14,10 +16,31 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  final _auth = FirebaseAuth.instance;
+
+  @override
+  void initState() {
+    super.initState();
+    getCurrentUser();
+  }
+
+  void getCurrentUser() async {
+    try {
+      final user = await _auth.currentUser();
+      if (user != null) {
+        loggedInUser = user;
+        print('user email" ${loggedInUser.email}');
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         backgroundColor: Theme.of(context).primaryColor,
         title: Text(
           'Home',
@@ -75,7 +98,14 @@ class _HomeState extends State<Home> {
               title: Text('Chat with Doctor'),
               leading: Icon(Icons.chat),
               onTap: () => Navigator.pushNamed(context, ChatScreen.id),
-            )
+            ),
+            ListTile(
+                title: Text('Sign Out'),
+                leading: Icon(Icons.exit_to_app),
+                onTap: () {
+                  _auth.signOut();
+                  Navigator.pushReplacementNamed(context, LoginScreen.id);
+                })
           ],
         ),
       ),
