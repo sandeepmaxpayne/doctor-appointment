@@ -1,7 +1,11 @@
+import 'package:doctor_appointment/chat_data.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+
+import 'home_page.dart';
 
 final _firestore = Firestore.instance;
 FirebaseUser loggedInUser;
@@ -54,7 +58,7 @@ class _ChatScreenState extends State<ChatScreen> {
               icon: Icon(Icons.close),
               onPressed: () {
 //                _auth.signOut();
-                Navigator.pop(context);
+                Navigator.popAndPushNamed(context, Home.id);
               }),
         ],
         title: Text(
@@ -95,7 +99,13 @@ class _ChatScreenState extends State<ChatScreen> {
                   FlatButton(
                     onPressed: () {
                       if (messageTextController.text.isNotEmpty) {
-                        _firestore.collection('messages1').add({
+                        // print(Provider.of<ChatData>(context, listen: false).phNo);
+
+                        _firestore
+                            .collection(
+                                Provider.of<ChatData>(context, listen: false)
+                                    .phNo)
+                            .add({
                           'text': messageText,
                           'sender': loggedInUser.email,
                           // 'time': DateTime.now()
@@ -124,7 +134,10 @@ class MessageStream extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
-      stream: _firestore.collection('messages1').orderBy('date').snapshots(),
+      stream: _firestore
+          .collection(Provider.of<ChatData>(context, listen: false).phNo)
+          .orderBy('date')
+          .snapshots(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return Center(
@@ -196,14 +209,14 @@ class MessageBubble extends StatelessWidget {
                     bottomRight: Radius.circular(30.0),
                     topRight: Radius.circular(30.0)),
             elevation: 5.0,
-            color: isMe ? Colors.lightBlueAccent : Colors.white,
+            color: isMe ? Colors.yellow.shade300 : Colors.white,
             child: Padding(
               padding:
                   const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
               child: Text(
                 text,
                 style: TextStyle(
-                    color: isMe ? Colors.white : Colors.black54,
+                    color: isMe ? Colors.black : Colors.black54,
                     fontSize: 20.0),
               ),
             ),

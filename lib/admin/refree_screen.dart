@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
 class RefreeScreen extends StatelessWidget {
+  static const id = "AdminRefreeScreen";
   @override
   Widget build(BuildContext context) {
     return Scaffold(

@@ -4,6 +4,7 @@ import 'package:doctor_appointment/model/hospital_form_data.dart';
 import 'package:flutter/material.dart';
 
 class AllHospitalDetails extends StatelessWidget {
+  static const id = "AdminHospitalScreeen";
   @override
   Widget build(BuildContext context) {
     return Scaffold(

@@ -1,21 +1,22 @@
+import 'package:doctor_appointment/admin/dashboard.dart';
 import 'package:doctor_appointment/borders.dart';
 import 'package:doctor_appointment/custom_button.dart';
 import 'package:doctor_appointment/custom_text_forn_field.dart';
-import 'package:doctor_appointment/home_page.dart';
-import 'package:doctor_appointment/screen/register_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 
-class LoginScreen extends StatefulWidget {
-  static const id = "LoginScreen";
+class AdminLoginScreen extends StatefulWidget {
+  static const id = "AdminScreen";
 
   @override
-  _LoginScreenState createState() => _LoginScreenState();
+  _AdminLoginScreenState createState() => _AdminLoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+const String adminEmail = "admin@gmail.com";
+
+class _AdminLoginScreenState extends State<AdminLoginScreen> {
   final auth = FirebaseAuth.instance;
   String loginEmail;
   String loginPassword;
@@ -25,7 +26,10 @@ class _LoginScreenState extends State<LoginScreen> {
 
   snackBarMessage(String message, Color color) {
     return _loginScaffoldKey.currentState.showSnackBar(SnackBar(
-      content: Text(message),
+      content: Text(
+        message,
+        textAlign: TextAlign.center,
+      ),
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
               topLeft: Radius.circular(20.0), topRight: Radius.circular(20.0))),
@@ -65,7 +69,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       child: ListView(
                         children: [
                           Text(
-                            "Patient/Doctor/Hospital Login",
+                            "ADMIN LOGIN",
                             textAlign: TextAlign.center,
                             style: textTheme.headline,
                           ),
@@ -75,28 +79,6 @@ class _LoginScreenState extends State<LoginScreen> {
                           _buildForm()
                         ],
                       ),
-                    ),
-                  ),
-                  InkWell(
-                    onTap: () => Navigator.pushNamed(context, SignUpScreen.id),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          'Don\'t have and account ?',
-                          style: textTheme.body1.copyWith(
-                              color: Colors.black87,
-                              fontWeight: FontWeight.w600),
-                        ),
-                        SizedBox(
-                          width: 10.0,
-                        ),
-                        Text(
-                          'Register',
-                          style:
-                              textTheme.body1.copyWith(color: Colors.lightBlue),
-                        )
-                      ],
                     ),
                   ),
                   SizedBox(
@@ -119,11 +101,11 @@ class _LoginScreenState extends State<LoginScreen> {
         children: [
           CustomTextFormField(
             textInputType: TextInputType.emailAddress,
-            labelText: 'Email Address',
+            labelText: 'Admin Email',
             border: Borders.outlineBorder,
             validator: (value) {
               if (value.isEmpty) {
-                return "Email cannot be empty";
+                return "INVALID EMAIL";
               }
               return null;
             },
@@ -158,11 +140,11 @@ class _LoginScreenState extends State<LoginScreen> {
             textInputType: TextInputType.text,
             validator: (value) {
               if (value.isEmpty) {
-                return 'Password cannot be empty';
+                return 'INVALID PASSWORD';
               }
               return null;
             },
-            labelText: 'Password',
+            labelText: 'Admin Password',
             obscured: true,
             onChanged: (value) {
               loginPassword = value;
@@ -192,42 +174,12 @@ class _LoginScreenState extends State<LoginScreen> {
           SizedBox(
             height: 8.0,
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              GestureDetector(
-                onTap: () async {
-                  try {
-                    if (loginEmail != null) {
-                      await auth.sendPasswordResetEmail(email: loginEmail);
-                      snackBarMessage('Reset Password sent to your $loginEmail',
-                          Colors.green.shade500);
-                    } else {
-                      snackBarMessage(
-                          'Please enter your previous email address',
-                          Colors.red.shade500);
-                    }
-                  } catch (e) {
-                    snackBarMessage(
-                        loginEmail.isEmpty
-                            ? 'Please enter your email !'
-                            : e.message,
-                        Colors.red);
-                  }
-                },
-                child: Text(
-                  "Forgot Password",
-                  style: textTheme.body1.copyWith(color: Colors.lightBlue),
-                ),
-              ),
-            ],
-          ),
           SizedBox(
             height: 20.0,
           ),
           CustomButton(
             elevation: 6.0,
-            title: 'Sign In',
+            title: 'ADMIN LOGIN',
             textStyle: textTheme.title.copyWith(color: Colors.black),
             color: Colors.yellow.shade500,
             onPressed: () async {
@@ -235,78 +187,35 @@ class _LoginScreenState extends State<LoginScreen> {
                 setState(() {
                   progress = true;
                 });
+                if (adminEmail == loginEmail) {
+                  try {
+                    final logUser = await auth.signInWithEmailAndPassword(
+                        email: loginEmail, password: loginPassword);
+                    if (logUser != null) {
+                      setState(() {
+                        progress = false;
+                      });
 
-                try {
-                  final logUser = await auth.signInWithEmailAndPassword(
-                      email: loginEmail, password: loginPassword);
-                  if (logUser != null) {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => Dashboard()));
+                    }
+                  } catch (e) {
                     setState(() {
                       progress = false;
                     });
-                    Navigator.pushNamed(context, Home.id);
+                    snackBarMessage(e.message, Colors.red);
                   }
-                } catch (e) {
+                } else {
                   setState(() {
                     progress = false;
                   });
-                  snackBarMessage(e.message, Colors.red);
+                  snackBarMessage("INVALID ADMIN EMAIL!", Colors.red);
                 }
               }
             },
           ),
           SizedBox(
             height: 16.0,
-          ),
-//          _buildSeparator(),
-//          SizedBox(
-//            height: 16.0,
-//          ),
-//          CustomButton(
-//            title: 'Sign With Google',
-//            textStyle: textTheme.title,
-//            hasIcon: true,
-//            color: Colors.white,
-//            elevation: 6.0,
-//            onPressed: () {
-//              //TODO
-//            },
-//            icon: Image.asset(
-//              "image/google.png",
-//              height: 25.0,
-//              width: 25.0,
-//            ),
-//          )
-        ],
-      ),
-    );
-  }
-
-  Widget _buildSeparator() {
-    var textTheme = Theme.of(context).textTheme;
-    return Container(
-      margin: EdgeInsets.symmetric(horizontal: 16.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Expanded(
-            child: Container(
-              color: Colors.black,
-            ),
-          ),
-          SizedBox(
-            width: 8.0,
-          ),
-          Text(
-            "OR",
-            style: textTheme.title,
-          ),
-          SizedBox(
-            width: 8.0,
-          ),
-          Expanded(
-            child: Container(
-              color: Colors.black,
-            ),
           ),
         ],
       ),

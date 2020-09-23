@@ -4,6 +4,7 @@ import 'package:doctor_appointment/model/patient_form_data.dart';
 import 'package:flutter/material.dart';
 
 class AllPatientDetailScreen extends StatelessWidget {
+  static const id = "AdminPatientScreen";
   @override
   Widget build(BuildContext context) {
     return Scaffold(
