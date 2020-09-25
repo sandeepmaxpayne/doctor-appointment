@@ -5,6 +5,7 @@ import 'package:doctor_appointment/chat.dart';
 import 'package:doctor_appointment/chat_data.dart';
 import 'package:doctor_appointment/doctor_registration.dart';
 import 'package:doctor_appointment/hospita_register.dart';
+import 'package:doctor_appointment/messaging_widget.dart';
 import 'package:doctor_appointment/patient_registration_form.dart';
 import 'package:doctor_appointment/referre.dart';
 import 'package:doctor_appointment/screen/login_screen.dart';
@@ -28,7 +29,7 @@ class DoctorApp extends StatelessWidget {
       child: MaterialApp(
         theme: ThemeData(primaryColor: Color(0xFFFFb300)),
         initialRoute: LoginScreen.id,
-        // home: AvailableChat(),
+        //  home: MessagingWidget(),
 //      home: AllRegisterDoctorScreen(),
         // home: AllPatientDetailScreen(),
         //  home: RefreeScreen(),

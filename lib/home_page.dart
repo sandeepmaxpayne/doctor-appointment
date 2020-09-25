@@ -1,5 +1,3 @@
-import 'package:doctor_appointment/admin/patientdetail_screen.dart';
-import 'package:doctor_appointment/admin/style_const.dart';
 import 'package:doctor_appointment/admin_access/admin_login_screen.dart';
 import 'package:doctor_appointment/chat.dart';
 import 'package:doctor_appointment/chat_data.dart';
@@ -13,6 +11,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:share/share.dart';
 
 import 'model/patient_form_data.dart';
 
@@ -95,12 +94,12 @@ class _HomeState extends State<Home> {
           padding: EdgeInsets.zero,
           children: <Widget>[
             DrawerHeader(
-              child: CircleAvatar(
-                child: Text("Logo"),
-                backgroundColor: Color(0xFFffe97d),
-                radius: 5.0,
+              child: Text(''),
+              decoration: BoxDecoration(
+                color: Color(0xFFFFB74D),
+                image: DecorationImage(
+                    image: AssetImage("image/logo.png"), fit: BoxFit.fill),
               ),
-              decoration: BoxDecoration(color: Color(0xFFFFB74D)),
             ),
             ListTile(
               title: Text('Notification'),
@@ -112,7 +111,9 @@ class _HomeState extends State<Home> {
             ListTile(
               title: Text('share'),
               leading: Icon(Icons.share),
-              onTap: () {},
+              onTap: () {
+                Share.share('new app link');
+              },
             ),
             ListTile(
               title: Text('contact'),

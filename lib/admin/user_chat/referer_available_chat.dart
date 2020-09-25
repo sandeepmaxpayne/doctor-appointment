@@ -36,7 +36,7 @@ class _RefererAvailableChatState extends State<RefererAvailableChat> {
             children: [
               ListTile(
                 onTap: () {
-                  Provider.of<ChatData>(context)
+                  Provider.of<ChatData>(context, listen: false)
                       .changeData(refererData[index].referrerPhoneNo);
                   Navigator.pushNamed(context, ChatScreen.id);
                 },

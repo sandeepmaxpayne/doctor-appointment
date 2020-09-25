@@ -36,7 +36,7 @@ class _PatientAvailableChatState extends State<PatientAvailableChat> {
             children: [
               ListTile(
                 onTap: () {
-                  Provider.of<ChatData>(context)
+                  Provider.of<ChatData>(context, listen: false)
                       .changeData(patientData[index].phoneNo);
                   Navigator.pushNamed(context, ChatScreen.id);
                 },
