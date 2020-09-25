@@ -1,24 +1,24 @@
 import 'package:doctor_appointment/chat.dart';
 import 'package:doctor_appointment/chat_data.dart';
-import 'package:doctor_appointment/controller/patient_form_controller.dart';
-import 'package:doctor_appointment/model/patient_form_data.dart';
+import 'package:doctor_appointment/controller/hospital_form_controller.dart';
+import 'package:doctor_appointment/model/hospital_form_data.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class AvailableChat extends StatefulWidget {
+class HospitalAvailableChat extends StatefulWidget {
   @override
-  _AvailableChatState createState() => _AvailableChatState();
+  _HospitalAvailableChatState createState() => _HospitalAvailableChatState();
 }
 
-class _AvailableChatState extends State<AvailableChat> {
-  List<PatientFormData> patientData = List<PatientFormData>();
+class _HospitalAvailableChatState extends State<HospitalAvailableChat> {
+  List<HospitalFormData> hospitalData = List<HospitalFormData>();
   @override
   void initState() {
     super.initState();
-    PatientFormController().getFeedList().then((patientData) {
+    HospitalFormController().getFeedList().then((hospitalData) {
       setState(() {
-        this.patientData = patientData;
-        print("PatientsData: ${patientData[0].toJson()} ");
+        this.hospitalData = hospitalData;
+        print("PatientsData: ${hospitalData[0].toJson()} ");
       });
     });
   }
@@ -27,7 +27,7 @@ class _AvailableChatState extends State<AvailableChat> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Ongoing Chat'),
+        title: Text('Hospital Ongoing Chat'),
         centerTitle: true,
       ),
       body: ListView.builder(
@@ -37,7 +37,7 @@ class _AvailableChatState extends State<AvailableChat> {
               ListTile(
                 onTap: () {
                   Provider.of<ChatData>(context)
-                      .changeData(patientData[index].phoneNo);
+                      .changeData(hospitalData[index].mobileNo);
                   Navigator.pushNamed(context, ChatScreen.id);
                 },
                 title: Row(
@@ -45,7 +45,7 @@ class _AvailableChatState extends State<AvailableChat> {
                     Icon(Icons.chat),
                     Expanded(
                       child: Text(
-                          "${patientData[index].patientName} - ${patientData[index].phoneNo}"),
+                          "${hospitalData[index].hospitalName} - ${hospitalData[index].mobileNo}"),
                     )
                   ],
                 ),
@@ -56,7 +56,7 @@ class _AvailableChatState extends State<AvailableChat> {
             ],
           );
         },
-        itemCount: patientData.length,
+        itemCount: hospitalData.length,
       ),
     );
   }

@@ -1,7 +1,11 @@
+import 'package:doctor_appointment/chat.dart';
 import 'package:doctor_appointment/controller/hospital_form_controller.dart';
 import 'package:doctor_appointment/model/hospital_form_data.dart';
 import 'package:flutter/material.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
+import 'package:provider/provider.dart';
+
+import 'chat_data.dart';
 
 class HospitalRegister extends StatelessWidget {
   static const id = 'HospitalReg';
@@ -147,7 +151,7 @@ class _BuildFormState extends State<BuildForm> {
                       return null;
                     },
                     decoration: InputDecoration(
-                        hintText: 'Phone Number: +91 1234567890',
+                        hintText: 'Phone Number: 1234567890',
                         labelText: 'Phone Number',
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(5.0),
@@ -266,8 +270,8 @@ class _BuildFormState extends State<BuildForm> {
                       return null;
                     },
                     decoration: InputDecoration(
-                        hintText: 'OTG Charges in INR',
-                        labelText: 'OTG Charges ',
+                        hintText: 'OT Charges in INR',
+                        labelText: 'OT Charges ',
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(5.0),
                         )),
@@ -307,6 +311,9 @@ class _BuildFormState extends State<BuildForm> {
                               "datata recorded successfully ${feedForm.toJson()}");
                           snackBarMessage(
                               "Data recorded successfully", Colors.green);
+                          Provider.of<ChatData>(context, listen: false)
+                              .changeData(feedForm.mobileNo);
+                          Navigator.pushNamed(context, ChatScreen.id);
                         } else {
                           setState(() {
                             progress = !progress;

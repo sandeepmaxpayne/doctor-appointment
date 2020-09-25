@@ -1,9 +1,9 @@
-import 'package:doctor_appointment/admin/available_chat.dart';
 import 'package:doctor_appointment/admin/patientdetail_screen.dart';
 import 'package:doctor_appointment/admin/refree_screen.dart';
 import 'package:doctor_appointment/admin/registerDoctorDetail_screen.dart';
 import 'package:doctor_appointment/admin/registerHospitalDetail_screen.dart';
 import 'package:doctor_appointment/admin/style_const.dart';
+import 'package:doctor_appointment/admin/user_chat/chat_list_available.dart';
 import 'package:flutter/material.dart';
 
 class Dashboard extends StatelessWidget {

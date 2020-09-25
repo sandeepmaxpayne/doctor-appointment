@@ -125,7 +125,7 @@ class _HomeState extends State<Home> {
               onTap: () {},
             ),
             ListTile(
-              title: Text('Chat with Doctor'),
+              title: Text('Chat with Admin'),
               leading: Icon(Icons.chat),
               onTap: () => _showDialog(),
             ),

@@ -1,3 +1,4 @@
+import 'package:doctor_appointment/admin/style_const.dart';
 import 'package:doctor_appointment/chat.dart';
 import 'package:doctor_appointment/chat_data.dart';
 import 'package:doctor_appointment/controller/patient_form_controller.dart';
@@ -133,27 +134,38 @@ class _BuildFormState extends State<BuildForm> {
                         )),
                   ),
                 ),
-                Center(
-                  child: DropdownButton<String>(
-                    onChanged: (String newValue) {
-                      setState(() {
-                        gender = newValue;
-                        genderController.text = newValue;
-                        print('gender: $gender');
-                      });
-                    },
-                    value: gender,
-                    items: ['Male', 'Female']
-                        .map<DropdownMenuItem<String>>(
-                            (e) => DropdownMenuItem<String>(
-                                  value: e,
-                                  child: Text(e),
-                                  onTap: () {
-                                    print('value: $e');
-                                  },
-                                ))
-                        .toList(),
-                  ),
+                Row(
+                  children: [
+                    SizedBox(
+                      width: 18.0,
+                    ),
+                    Text('Sex:'),
+                    SizedBox(
+                      width: 18.0,
+                    ),
+                    Center(
+                      child: DropdownButton<String>(
+                        onChanged: (String newValue) {
+                          setState(() {
+                            gender = newValue;
+                            genderController.text = newValue;
+                            print('gender: $gender');
+                          });
+                        },
+                        value: gender,
+                        items: ['Male', 'Female']
+                            .map<DropdownMenuItem<String>>(
+                                (e) => DropdownMenuItem<String>(
+                                      value: e,
+                                      child: Text(e),
+                                      onTap: () {
+                                        print('value: $e');
+                                      },
+                                    ))
+                            .toList(),
+                      ),
+                    ),
+                  ],
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
@@ -313,23 +325,55 @@ class _BuildFormState extends State<BuildForm> {
                     keyboardType: TextInputType.multiline,
                   ),
                 ),
-                RangeSlider(
-                  onChanged: (RangeValues newRange) {
-                    setState(() {
-                      selectedRange = newRange;
-                      startBudgetController.text =
-                          selectedRange.start.toString();
-                      endBudgetController.text = selectedRange.end.toString();
-                      print('selected range: $selectedRange');
-                    });
-                  },
-                  min: 200.0,
-                  max: 5000.0,
-                  divisions: 100,
-                  values: selectedRange,
-                  activeColor: Theme.of(context).primaryColor,
-                  labels: RangeLabels('\u20B9${selectedRange.start}',
-                      '\u20B9${selectedRange.end}'),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Text(
+                        "Select Surgery Budget Range",
+                        style: kTextStyle,
+                      ),
+                      SizedBox(
+                        height: 8.0,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 18.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              "min: \u20B9${selectedRange.start.toStringAsFixed(2)}",
+                              style: kTextStyle,
+                            ),
+                            Text(
+                              ' max: \u20B9${selectedRange.end.toStringAsFixed(2)}',
+                              style: kTextStyle,
+                            )
+                          ],
+                        ),
+                      ),
+                      RangeSlider(
+                        onChanged: (RangeValues newRange) {
+                          setState(() {
+                            selectedRange = newRange;
+                            startBudgetController.text =
+                                selectedRange.start.toString();
+                            endBudgetController.text =
+                                selectedRange.end.toString();
+                            print('selected range: $selectedRange');
+                          });
+                        },
+                        min: 200.0,
+                        max: 10000.0,
+                        divisions: 100,
+                        values: selectedRange,
+                        activeColor: Theme.of(context).primaryColor,
+                        labels: RangeLabels('\u20B9${selectedRange.start}',
+                            '\u20B9${selectedRange.end}'),
+                      ),
+                    ],
+                  ),
                 ),
                 RaisedButton(
                   color: Color(0xFFFFE97D),

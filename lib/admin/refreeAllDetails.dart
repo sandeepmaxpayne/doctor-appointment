@@ -22,6 +22,10 @@ class RefreeAllDetails extends StatelessWidget {
               style: kTextStyle,
             ),
             Text(
+              "Patient Name: ${refreeFormData.patientName}",
+              style: kTextStyle,
+            ),
+            Text(
               "Age: ${refreeFormData.age}",
               style: kTextStyle,
             ),
@@ -44,6 +48,10 @@ class RefreeAllDetails extends StatelessWidget {
             ),
             Text(
               "Referrer PhoneNo: ${refreeFormData.referrerPhoneNo}",
+              style: kTextStyle,
+            ),
+            Text(
+              "Referer Email: ${refreeFormData.referredPersonMail}",
               style: kTextStyle,
             ),
           ],

@@ -1,7 +1,11 @@
+import 'package:doctor_appointment/chat.dart';
 import 'package:doctor_appointment/controller/refree_form_controller.dart';
 import 'package:doctor_appointment/model/refree_form_data.dart';
 import 'package:flutter/material.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
+import 'package:provider/provider.dart';
+
+import 'chat_data.dart';
 
 class Referee extends StatelessWidget {
   static const id = 'Referee';
@@ -43,6 +47,9 @@ class _BuildFormState extends State<BuildForm> {
   TextEditingController referrerPhoneNoController = new TextEditingController();
   TextEditingController patientPhoneNoController = new TextEditingController();
   TextEditingController placeController = new TextEditingController();
+  TextEditingController referredPersonMailController =
+      new TextEditingController();
+  TextEditingController patientNameController = new TextEditingController();
 
   snackBarMessage(String message, Color color) {
     return _scaffoldKey.currentState.showSnackBar(SnackBar(
@@ -83,10 +90,30 @@ class _BuildFormState extends State<BuildForm> {
                     },
                     decoration: InputDecoration(
                         hintText: 'Name of the referred person',
-                        labelText: 'Referrer Name',
+                        labelText: 'Referred Person Name',
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(5.0),
                         )),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: TextFormField(
+                    controller: patientNameController,
+                    validator: (String value) {
+                      if (value.isEmpty) {
+                        return "Error must not be empty";
+                      }
+
+                      return null;
+                    },
+                    decoration: InputDecoration(
+                        hintText: 'Patient Name',
+                        labelText: 'Patient Name',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(5.0),
+                        )),
+                    keyboardType: TextInputType.multiline,
                   ),
                 ),
                 Padding(
@@ -100,8 +127,8 @@ class _BuildFormState extends State<BuildForm> {
                       return null;
                     },
                     decoration: InputDecoration(
-                        hintText: 'Age of Referrer Person',
-                        labelText: 'Referer Age',
+                        hintText: 'Age',
+                        labelText: 'Age',
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(2.0),
                         )),
@@ -197,8 +224,8 @@ class _BuildFormState extends State<BuildForm> {
                       return null;
                     },
                     decoration: InputDecoration(
-                        hintText: 'Phone no of Patient',
-                        labelText: 'Phone no of Patient',
+                        hintText: 'Patient Phone No',
+                        labelText: 'Patient Phone No',
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(5.0),
                         )),
@@ -217,55 +244,83 @@ class _BuildFormState extends State<BuildForm> {
                       return null;
                     },
                     decoration: InputDecoration(
-                        hintText: 'place',
-                        labelText: 'place',
+                        hintText: 'place of patient',
+                        labelText: 'place of patient',
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(5.0),
                         )),
                     keyboardType: TextInputType.multiline,
                   ),
                 ),
-                RaisedButton(
-                  color: Color(0xFFFFE97D),
-                  onPressed: () {
-                    if (widget._formKey.currentState.validate()) {
-                      setState(() {
-                        progress = true;
-                      });
-                      RefreeForm refreeForm = RefreeForm(
-                          refererNameController.text,
-                          ageController.text,
-                          genderController.text,
-                          diagnosisController.text,
-                          motivatedController.text,
-                          referrerPhoneNoController.text,
-                          patientPhoneNoController.text,
-                          placeController.text);
-                      RefreeController refreeController = RefreeController();
-                      refreeController.submitForm(refreeForm,
-                          (String response) {
-                        print("response: $response");
-                        if (response == RefreeController.STATUS_SUCCESS) {
-                          setState(() {
-                            progress = !progress;
-                          });
-                          print(
-                              "Data recorded successfully: ${refreeForm.toJson()}");
-                          snackBarMessage(
-                              "Data recorded successfully", Colors.green);
-                          // sleep(const Duration(seconds: 4));
-                          //  Navigator.pop(context);
-                        } else {
-                          setState(() {
-                            progress = !progress;
-                          });
-                          print("Error saving data");
-                          snackBarMessage("Error Saving Data!", Colors.red);
-                        }
-                      });
-                    }
-                  },
-                  child: Text('Submit'),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: TextFormField(
+                    controller: referredPersonMailController,
+                    validator: (String value) {
+                      if (value.isEmpty) {
+                        return "Error must not be empty";
+                      }
+
+                      return null;
+                    },
+                    decoration: InputDecoration(
+                        hintText: 'Referred person mail id',
+                        labelText: 'Referred Person Email ID',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(5.0),
+                        )),
+                    keyboardType: TextInputType.emailAddress,
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: RaisedButton(
+                    color: Color(0xFFFFE97D),
+                    onPressed: () {
+                      if (widget._formKey.currentState.validate()) {
+                        setState(() {
+                          progress = true;
+                        });
+                        RefreeForm refreeForm = RefreeForm(
+                            refererNameController.text,
+                            patientNameController.text,
+                            ageController.text,
+                            genderController.text,
+                            diagnosisController.text,
+                            motivatedController.text,
+                            referrerPhoneNoController.text,
+                            patientPhoneNoController.text,
+                            placeController.text,
+                            referredPersonMailController.text);
+                        RefreeController refreeController = RefreeController();
+                        refreeController.submitForm(refreeForm,
+                            (String response) {
+                          print("response: $response");
+                          if (response == RefreeController.STATUS_SUCCESS) {
+                            setState(() {
+                              progress = !progress;
+                            });
+                            print(
+                                "Data recorded successfully: ${refreeForm.toJson()}");
+                            snackBarMessage(
+                                "Data recorded successfully", Colors.green);
+                            // sleep(const Duration(seconds: 4));
+                            //  Navigator.pop(context);
+                            Provider.of<ChatData>(context, listen: false)
+                                .changeData(refreeForm.referrerPhoneNo);
+                            Navigator.pushNamed(context, ChatScreen.id);
+                          } else {
+                            setState(() {
+                              progress = !progress;
+                            });
+                            print("Error saving data");
+                            snackBarMessage("Error Saving Data!", Colors.red);
+                          }
+                        });
+                      }
+                    },
+                    child: Text('Submit'),
+                  ),
                 ),
               ],
             ),

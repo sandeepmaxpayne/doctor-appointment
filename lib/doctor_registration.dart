@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:doctor_appointment/chat.dart';
+import 'package:doctor_appointment/chat_data.dart';
 import 'package:doctor_appointment/controller/doctor_form_controller.dart';
 import 'package:doctor_appointment/model/doctor_form_data.dart';
 import 'package:file_picker/file_picker.dart';
@@ -8,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:path/path.dart' as p;
+import 'package:provider/provider.dart';
 
 class DoctorRegister extends StatelessWidget {
   static const id = 'DoctorReg';
@@ -164,27 +167,40 @@ class _BuildFormState extends State<BuildForm> {
                         )),
                   ),
                 ),
-                Center(
-                  child: DropdownButton<String>(
-                    onChanged: (String newValue) {
-                      setState(() {
-                        gender = newValue;
-                        genderController.text = newValue;
-                        print('gender: $gender');
-                      });
-                    },
-                    value: gender,
-                    items: ['Male', 'Female']
-                        .map<DropdownMenuItem<String>>(
-                            (e) => DropdownMenuItem<String>(
-                                  value: e,
-                                  child: Text(e),
-                                  onTap: () {
-                                    print('value: $e');
-                                  },
-                                ))
-                        .toList(),
-                  ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      width: 18.0,
+                    ),
+                    Text('Sex:'),
+                    SizedBox(
+                      width: 20.0,
+                    ),
+                    Center(
+                      child: DropdownButton<String>(
+                        onChanged: (String newValue) {
+                          setState(() {
+                            gender = newValue;
+                            genderController.text = newValue;
+                            print('gender: $gender');
+                          });
+                        },
+                        value: gender,
+                        hint: Text('sex'),
+                        items: ['Male', 'Female']
+                            .map<DropdownMenuItem<String>>(
+                                (e) => DropdownMenuItem<String>(
+                                      value: e,
+                                      child: Text(e),
+                                      onTap: () {
+                                        print('value: $e');
+                                      },
+                                    ))
+                            .toList(),
+                      ),
+                    ),
+                  ],
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
@@ -352,7 +368,7 @@ class _BuildFormState extends State<BuildForm> {
                     },
                     decoration: InputDecoration(
                         hintText: 'Willing to do as Freelance or Surgeon',
-                        labelText: 'Freelance or Surgeon',
+                        labelText: 'As a Freelance Surgeon or Physician',
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(5.0),
                         )),
@@ -397,6 +413,9 @@ class _BuildFormState extends State<BuildForm> {
                           snackBarMessage(
                               "Data recorded successfully", Colors.green);
                           //      Navigator.of(context).pop();
+                          Provider.of<ChatData>(context, listen: false)
+                              .changeData(feedForm.phoneNo);
+                          Navigator.pushNamed(context, ChatScreen.id);
                         } else {
                           setState(() {
                             progress = !progress;
