@@ -3,6 +3,8 @@ import 'package:doctor_appointment/chat.dart';
 import 'package:doctor_appointment/chat_data.dart';
 import 'package:doctor_appointment/controller/patient_form_controller.dart';
 import 'package:doctor_appointment/doctor_registration.dart';
+import 'package:doctor_appointment/group_chat/group_chat_controller.dart';
+import 'package:doctor_appointment/group_chat/group_chat_model.dart';
 import 'package:doctor_appointment/hospita_register.dart';
 import 'package:doctor_appointment/patient_registration_form.dart';
 import 'package:doctor_appointment/referre.dart';
@@ -12,6 +14,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:share/share.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'model/patient_form_data.dart';
 
@@ -28,6 +31,22 @@ class _HomeState extends State<Home> {
   final _formKey = GlobalKey<FormState>();
   List<PatientFormData> patientData = List<PatientFormData>();
   List<String> phoneList = List();
+  List<GroupChatModel> groupChatLink = List<GroupChatModel>();
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  snackBarMessage(String message, Color color) {
+    return _scaffoldKey.currentState.showSnackBar(SnackBar(
+      content: Text(
+        message,
+        style: TextStyle(color: Colors.black),
+      ),
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(20.0), topRight: Radius.circular(20.0))),
+      backgroundColor: color,
+      behavior: SnackBarBehavior.fixed,
+    ));
+  }
 
   @override
   void initState() {
@@ -56,6 +75,7 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
         automaticallyImplyLeading: false,
         backgroundColor: Theme.of(context).primaryColor,
@@ -128,7 +148,9 @@ class _HomeState extends State<Home> {
             ListTile(
               title: Text('Chat with Admin'),
               leading: Icon(Icons.chat),
-              onTap: () => _showDialog(),
+              onTap: () async {
+                _showDialog();
+              },
             ),
             ListTile(
                 title: Text('Sign Out'),
@@ -176,6 +198,30 @@ class _HomeState extends State<Home> {
             },
             color: Color(0xFFFFE97D),
             child: Text("Referred Person"),
+          ),
+          RaisedButton(
+            onPressed: () async {
+              GroupChatController().getFeedList().then((groupChatLink) {
+                setState(() {
+                  this.groupChatLink = groupChatLink;
+                  print("grouplink:${groupChatLink[0].whatsAppLink}");
+                });
+              });
+              if (groupChatLink.isNotEmpty) {
+                String chatLink = groupChatLink[0].whatsAppLink;
+                if (await canLaunch(chatLink)) {
+                  await launch(chatLink);
+                } else {
+                  throw snackBarMessage("No group chat scheduled by doctor !",
+                      Colors.yellow.shade300);
+                }
+              } else {
+                snackBarMessage(
+                    "No group chat scheduled !", Colors.yellow.shade300);
+              }
+            },
+            color: Color(0xFFFFE97D),
+            child: Text("Start Group Chat"),
           ),
         ],
       )),
